@@ -1,4 +1,4 @@
-import '../style/index.styl';
+import '../style/index.scss';
 import hamster_img_url from '../images/hamster.jpg';
 
 //import npm packages, node modules, other files here

@@ -1,33 +1,40 @@
 import webpack from 'webpack';
+import path from 'path';
+import postCssConfig from './postcss.config';
 
 export default {
     entry: [
-        '/frontend/src/js/index.js'
+        'babel-polyfill',
+        `${path.resolve(__dirname, '../', 'src', 'js')}/index.js`
     ],
     devtool: 'source-map',
     output: {
-        path: '/frontend/dist/',
+        path: path.join(__dirname, '..', 'dist'),
         publicPath: '/static/',
     },
+
     module: {
-        loaders: [
-            {
+        rules: [{
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['es2015', 'react', 'stage-0']
+                    }
+                }, 'eslint-loader'],
                 test: /\.js$/,
-                exclude: /node_modules/,
-                loader: 'babel',
-            },
-            {
-                test: /\.css$/,
-                loader: 'style!css'
-            },
-            {
-                test: /\.styl$/,
-                loader: 'style!css!stylus'
+                exclude: /node_modules/
+            }, {
+                test: /\.scss$/,
+                use: ['style-loader', 'css-loader', {
+                    loader: 'postcss-loader',
+                    options: postCssConfig
+                }, 'sass-loader']
             },
             {
                 test: /\.(mp4|webm|mp3|ogg|wav|jpeg|jpg|bmp|ico|png|gif|ttf|otf|woff|eot)$/,
-                loader: 'file?name=[path][name].[ext]?[hash]'
-            }
+                use: 'file-loader?name=[name].[ext]?[hash]'
+            },
+
         ]
     },
     target: 'web',

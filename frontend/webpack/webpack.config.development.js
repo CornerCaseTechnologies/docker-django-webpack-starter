@@ -1,9 +1,10 @@
 import base_config from './webpack.config.base';
 import webpack from 'webpack';
+import path from 'path';
 
 export default {
     ...base_config,
-    debug: true,
+
     output: {
         ...base_config.output,
         publicPath: 'http://localhost:3000' + base_config.output.publicPath,
@@ -15,7 +16,16 @@ export default {
         ...base_config.entry
     ],
     plugins: [
-        ...base_config.plugins,
+        new webpack.LoaderOptionsPlugin({
+            debug: true,
+            options: {
+                eslint: {
+                    configFile: path.join(__dirname, '..', '.eslintrc')
+                }
+            }
+        }),
+
+        // ...base_config.plugins,
         new webpack.HotModuleReplacementPlugin(),
         new webpack.DefinePlugin({
             '__DEV__': true,
