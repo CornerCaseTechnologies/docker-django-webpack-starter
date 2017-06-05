@@ -1,18 +1,31 @@
-version: '3'
+version: '2'
+volumes:
+    data:
 services:
     db:
+        image: postgres:9.6
+        environment:
+            POSTGRES_USER: django
+            POSTRES_PASSWORD: django
         volumes:
-            - "./logs/postgres:/var/log/postgresql"
+            - data:/var/lib/postgresql/data
     django:
         build:
             context: ./backend
             dockerfile: Dockerfile-production
         environment:
-            DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_PROD}
+            DJANGO_SETTINGS_MODULE: conf.settings_prod
+            DB_NAME: django
+            DB_USER: django
+            DB_HOST: db
+            DB_PORT: 5432
         volumes:
+            - ./data:/data:ro
             - "./logs/app:/tmp/logs/app"
             - "./logs/gunicorn:/tmp/logs/gunicorn"
-            - "./backend/media:/media"
+        restart: always
+        ports:
+            - "8000:8000"
         depends_on:
             - db
     nginx:
@@ -21,10 +34,9 @@ services:
             dockerfile: ./nginx/Dockerfile
         depends_on:
             - django
-        volumes: 
-            - "./backend/media:/media"
-            - "./logs/nginx:/tmp/logs"
         ports:
             - "80:80"
-            - "443:443"
-
+        volumes:
+            - "./backend/media:/media"
+            - "./logs/nginx:/tmp/logs"
+        restart: always

@@ -1,7 +1,7 @@
 #!/bin/bash
 source bin/env.sh
 
-if ! [[ $* == *--skipbuild* ]]; then
+if [ -z "$SKIP_BUILD" ]; then
     ./bin/build_frontend.sh
 else
     echo "skipping frontend build..."

@@ -1,9 +1,9 @@
 FROM python:3.5
 
 ENV PYTHONUNBUFFERED 1
-
 RUN pip3 install --upgrade pip
-RUN pip3 install wheel
+COPY requirements.txt tmp/
+RUN pip3 install -r tmp/requirements.txt
 
 RUN mkdir -p /app/static /tmp/logs/app
 

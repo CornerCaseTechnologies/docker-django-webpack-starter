@@ -4,6 +4,7 @@
 
 source bin/env.sh
 
+echo "building frontend..."
 dcdev build
 dcdev run --rm frontend npm run-script build
-dcdev run --rm -e DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_PROD django ./bin/collectstatic.sh
+dcdev run --rm --no-deps django ./bin/collectstatic.sh

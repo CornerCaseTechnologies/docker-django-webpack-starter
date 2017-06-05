@@ -2,11 +2,11 @@
 
 #initialize database if it hasn't been initialized yet
 
-DOCKER_INIT_DB_CONFIG=${DOCKER_INIT_DB_CONFIG:-$DOCKER_CONFIG_DEV}
+DOCKER_INIT_DB_CONFIG=${DOCKER_INIT_DB_CONFIG:-docker-compose.yml}
 
 echo "inti db config: $DOCKER_INIT_DB_CONFIG"
 
-if  [ $(docker-compose -f docker-compose.yml -f $DOCKER_INIT_DB_CONFIG ps | grep db | wc -l) == 0 ]; then
+if  [ $(docker-compose -f $DOCKER_INIT_DB_CONFIG ps | grep db | wc -l) == 0 ]; then
     echo "initializing database"
     docker-compose -f docker-compose.yml -f $DOCKER_INIT_DB_CONFIG up -d db
     DB_CONTAINER_ID=$(docker-compose -f docker-compose.yml -f $DOCKER_INIT_DB_CONFIG ps -q db)

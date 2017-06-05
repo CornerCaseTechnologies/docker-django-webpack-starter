@@ -5,6 +5,7 @@ services:
         volumes:
             - ./backend:/app
             - ./backend/media:/media
+            - ./frontend:/frontend
             - ./frontend/dist:/static
             - ./frontend/dist/assets.json:/app/assets.json
         command: ./bin/test.sh
@@ -16,8 +17,7 @@ services:
         depends_on:
             - db
             - selenium
-
     selenium:
         image: selenium/standalone-chrome-debug:2.53.0
-        ports: 
+        ports:
             - 5900:5900
