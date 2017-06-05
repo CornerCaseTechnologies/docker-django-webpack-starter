@@ -33,23 +33,24 @@ Start dev server:
 ```
 Wait for docker to set up container, then open [http://localhost:8000](http://localhost:8000)
 
-## production mode
+### setup production server
 
+1. install docker, docker-compose, git
+2. add deploy key to git repo
+3. clone repository, checkout appropriate branch
+4. create `.env` file at project root with env vars, sample:
 ```sh
-# build production images, create db backup & start
-./bin/deploy.sh
-
-# stop server
-./bin/stop_production.sh
-
-# start srever
-./bin/start_production.sh
+export DOCKER_CONFIG_PROD=docker-compose.production.yml #docker-compose file to use
+export PROD_MODE=true # always true for production mode
 ```
+5. run deploy script `./bin/deploy.sh`  
 
 In prod mode sources are added to docker image rather than mounted from host. Nginx serves static files, proxy pass to gunicorn for django app. Logs in `logs` dir.
 
+
+
 #### enable ssl
-Copy your .key and .crt files to `nginx/ssl` and run `./bin/deploy.sh`. 
+Copy your .key and .crt files to `nginx/ssl` and run `./bin/deploy.sh`.
 
 ## install dependencies
 ```sh
@@ -64,7 +65,7 @@ Copy your .key and .crt files to `nginx/ssl` and run `./bin/deploy.sh`.
 
 ```sh
 # create a backup in backups dir
-./bin/backup.sh 
+./bin/backup.sh
 
 # restore from a backup in backups dir (server must be stopped)
 ./bin/restore.sh backups/somebackup.bak
@@ -78,12 +79,6 @@ Copy your .key and .crt files to `nginx/ssl` and run `./bin/deploy.sh`.
 #create migration
 ./bin/django.sh makemigrations myapp
 
-#prod mode
-./bin/django_prod.sh [command]
-
-#start django shell in prod mode
-./bin/django_prod.sh shell
-
 ```
 
 ## layout
@@ -92,7 +87,6 @@ Copy your .key and .crt files to `nginx/ssl` and run `./bin/deploy.sh`.
 bin/                          - various utility scripts
 
 docker-compose.yml            - base docker compose config
-docker-compose.overrides.yml  - development docker compose config
 docker-compose.production.yml - production docker compose config
 
 frontend/                     - frontend stuff
@@ -131,7 +125,7 @@ See http://selenium-python.readthedocs.io/ for selenium driver api
 ./bin/test.sh
 
 # skip frontend build (eg, running tests repeatedly)
-./bin/test.sh --skipbuild 
+./bin/test.sh --skipbuild
 
 
 To debug tests it's possible to vnc into selenium container while its running at localhost:5900 and view the browser. Password is `secret`.
