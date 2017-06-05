@@ -33,6 +33,8 @@ Start dev server:
 ```
 Wait for docker to set up container, then open [http://localhost:8000](http://localhost:8000)
 
+After new python dependency add to requirements.txt on dev mode we need to run `docker-compose build` do build container.
+
 ### setup production server
 
 1. install docker, docker-compose, git
